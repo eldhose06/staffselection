@@ -18,12 +18,12 @@
 # from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from staffapp.models import Users
 # from staffapp.serializers import UserSerializer, RegistrationSerializer, RegisterSerializer
-
-
-from .serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer
+from .models import User
+from .serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer, UserCreateSerializer, \
+    UserLoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics
-from django.contrib.auth.models import User
+
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
@@ -31,50 +31,24 @@ from rest_framework import status
 from rest_framework_simplejwt.token_blacklist.models import BlacklistedToken, OutstandingToken
 
 
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = Users.objects.all()
-#     serializer_class = UserSerializer
 
-# def registration_view(request):
-#
-#     if request.method == 'POST':
-#         serializer = UserSerializer(data=request.data)
-#         data = {}
-#         if serializer.is_valid():
-# from staffapp.serializers import RegistrationSerializer
+class UserCreateAPIView(generics.CreateAPIView):
+    serializer_class = UserCreateSerializer
+    queryset = User.objects.all()
 
-# api_view(["POST"])
-# @permission_classes([AllowAny])
-# def Register_Users(request):
-#     try:
-#         data = []
-#         serializer = RegistrationSerializer(data=request.data)
-#         if serializer.is_valid():
-#             account = serializer.save()
-#             account.is_active = True
-#             # password = self.validated_data["password"]
-#             # account.set_password(password)
-#             account.save()
-#
-#             token = Token.objects.get_or_create(user=account)[0].key
-#             data["message"] = "user registered successfully"
-#             data["email"] = account.email
-#             data["username"] = account.username
-#             data["token"] = token
-#
-#         else:
-#             data = serializer.errors
-#
-#
-#         return Response(data)
-#     except IntegrityError as e:
-#         account=Users.objects.get(username='')
-#         account.delete()
-#         raise ValidationError({"400": f'{str(e)}'})
-#
-#     except KeyError as e:
-#         print(e)
-#         raise ValidationError({"400": f'Field {str(e)} missing'})
+
+class UserLoginAPIView(APIView):
+    serializer_class = UserLoginSerializer
+
+    def post(self, request, *args, **kwargs):
+        data = request.data
+        serializer = UserLoginSerializer(data=data)
+        # if not serializer.is_valid():
+        #     raise ValidationError(serializer.errors)
+        if serializer.is_valid(raise_exception=True):
+            new_data = {"email":serializer.data['email']}
+            return Response(new_data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

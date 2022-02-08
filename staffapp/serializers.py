@@ -16,10 +16,13 @@
 #     #     return user
 #
 #
+from django.contrib.auth import authenticate
 from rest_framework import serializers
-from django.contrib.auth.models import User
+
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
+
+from staffapp.models import User
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -130,3 +133,40 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+
+    def create(self, validated_data):
+        # print("Inside the Create Function")
+        user = User.objects.create_complete_user(validated_data['name'],
+                                                 validated_data['email'],
+                                                 validated_data['dob'],
+                                                 validated_data['gender'],
+                                                 validated_data['phoneNumber'],
+                                                 validated_data['password'],
+                                                 )
+        return user
+
+    class Meta:
+        model = User
+        fields = ['name', 'email', 'password', 'dob', 'gender', 'phoneNumber']
+        extra_kwargs = {'password': {'write_only': True}}
+
+
+class UserLoginSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(max_length=255, required=True)
+    password = serializers.CharField(max_length=255, required=True)
+
+    class Meta:
+        model = User
+        fields = ['email', 'password']
+        extra_kwargs = {'password': {'write_only': True}}
+
+    def validate(self, attrs, ):
+        user = authenticate(
+            email=attrs['email'], password=attrs['password'])
+        if user is None:
+            raise serializers.ValidationError('invalid credentials provided')
+        self.instance = user
+        return user
