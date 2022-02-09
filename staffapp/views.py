@@ -46,7 +46,7 @@ class UserLoginAPIView(APIView):
         # if not serializer.is_valid():
         #     raise ValidationError(serializer.errors)
         if serializer.is_valid(raise_exception=True):
-            new_data = {"email":serializer.data['email']}
+            new_data = {"id": serializer.data['id'], "email":serializer.data['email']}
             return Response(new_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
