@@ -3,4 +3,12 @@ from django.contrib import admin
 # Register your models here.
 # from staffapp.models import Users
 #
-# admin.site.register(Users)
+from staffapp.models import User, Religion, Caste, Institutes, Post, QualificationDetails, ApplicantInfo
+
+admin.site.register(User)
+admin.site.register(Religion)
+admin.site.register(Caste)
+admin.site.register(Institutes)
+admin.site.register(Post)
+admin.site.register(QualificationDetails)
+admin.site.register(ApplicantInfo)

@@ -16,13 +16,15 @@
 #     #     return user
 #
 #
+from MySQLdb.constants.FIELD_TYPE import JSON
 from django.contrib.auth import authenticate
-from rest_framework import serializers
+from rest_framework import serializers, status
+from rest_framework.response import Response
 
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
-from staffapp.models import User
+from staffapp.models import User, Religion, Caste, Institutes
 
 
 class RegisterSerializer(serializers.ModelSerializer):
@@ -138,6 +140,12 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
+        print(validated_data['name']);
+        print(validated_data['email']);
+        print(validated_data['dob']);
+        print(validated_data['gender']);
+        print(validated_data['phoneNumber']);
+        print(validated_data['password']);
         # print("Inside the Create Function")
         user = User.objects.create_complete_user(validated_data['name'],
                                                  validated_data['email'],
@@ -146,7 +154,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
                                                  validated_data['phoneNumber'],
                                                  validated_data['password'],
                                                  )
-        return user
+
+        return user;
 
     class Meta:
         model = User
@@ -170,3 +179,30 @@ class UserLoginSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('invalid credentials provided')
         self.instance = user
         return user
+
+
+
+class ReligionSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Religion
+        fields = ('id', 'religion')
+
+
+class CasteSerializer(serializers.HyperlinkedModelSerializer):
+    # caste = serializers.CharField(max_length=256)
+    religion = serializers.PrimaryKeyRelatedField(
+        queryset=Religion.objects.all(),
+        many=False)
+    class Meta:
+        model = Caste
+        fields = ('id', 'religion', 'caste')
+
+class InstituteSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Institutes
+        fields = ('id', 'instituteName')
+
+class PostSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Religion
+        fields = ('id', 'institute', 'postName')

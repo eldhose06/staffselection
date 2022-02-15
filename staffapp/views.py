@@ -18,11 +18,14 @@
 # from rest_framework.authtoken.serializers import AuthTokenSerializer
 # from staffapp.models import Users
 # from staffapp.serializers import UserSerializer, RegistrationSerializer, RegisterSerializer
-from .models import User
+from django.http import HttpResponse
+from rest_framework.utils import json
+
+from .models import User, Religion, Caste, Institutes, Post
 from .serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer, UserCreateSerializer, \
-    UserLoginSerializer
+    UserLoginSerializer, ReligionSerializer, CasteSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework import generics
+from rest_framework import generics, viewsets
 
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -49,6 +52,35 @@ class UserLoginAPIView(APIView):
             new_data = {"id": serializer.data['id'], "email":serializer.data['email']}
             return Response(new_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class ReligionViewSet(viewsets.ModelViewSet):
+    queryset = Religion.objects.all()
+    serializer_class = ReligionSerializer
+
+
+class CasteViewSet(viewsets.ModelViewSet):
+    queryset = Caste.objects.all()
+    serializer_class = CasteSerializer
+
+    def list(self, request, *args, **kwargs):
+        print(request.GET.get('religion_id'))
+        caste = Caste.objects.filter(religion=request.GET.get('religion_id'))
+        c_list = []
+        for item in caste:
+            c_list.append(item.caste)
+        print(c_list)
+        # return HttpResponse(json.dumps(c_list), status=status.HTTP_200_OK)
+        return HttpResponse(json.dumps({"caste": c_list}), status=status.HTTP_200_OK)
+
+
+class InstitutesViewSet(viewsets.ModelViewSet):
+    queryset = Institutes.objects.all()
+    serializer_class = ReligionSerializer
+
+class PostViewSet(viewsets.ModelViewSet):
+    queryset = Post.objects.all()
+    serializer_class = ReligionSerializer
+
 
 
 

@@ -6,7 +6,7 @@ from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, username, email, password=None):
+    def create_user(self,  email, password=None):
         """
         Creates and saves a User with the given email, date of
         birth and password.
@@ -15,7 +15,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError('Users must have an email address')
 
         user = self.model(
-            username=username,
+
             email=self.normalize_email(email),
         )
 
@@ -42,13 +42,13 @@ class CustomUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, email, password):
+    def create_superuser(self,  email, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
-            username,
+
             email,
             password=password,
         )
@@ -92,3 +92,60 @@ class User(AbstractBaseUser):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+class Religion(models.Model):
+    religion = models.CharField(max_length=256)
+
+
+class Caste(models.Model):
+    religion = models.ForeignKey(Religion, on_delete=models.CASCADE)
+    caste = models.CharField(max_length=256)
+
+class Institutes(models.Model):
+    instituteName = models.CharField(max_length=256)
+
+class Post(models.Model):
+    institute = models.ForeignKey(Institutes, on_delete=models.CASCADE)
+    postName = models.CharField(max_length=256)
+
+class QualificationDetails(models.Model):
+    sslcInstitution = models.CharField(max_length=256, null=True)
+    sslc_year_of_study = models.CharField(max_length=256, null=True)
+    sslc_marks_secured = models.CharField(max_length=256, null=True)
+    sslc_max_marks = models.CharField(max_length=256, null=True)
+    sslc_board = models.CharField(max_length=256, null=True)
+    sslcpercentage = models.CharField(max_length=256, null=True)
+
+    plustwoInstitution = models.CharField(max_length=256, null=True)
+    plustwo_year_of_study = models.CharField(max_length=256, null=True)
+    plustwo_marks_secured = models.CharField(max_length=256, null=True)
+    plustwo_max_marks = models.CharField(max_length=256, null=True)
+    plustwo_board = models.CharField(max_length=256, null=True)
+    plustwopercentage = models.CharField(max_length=256, null=True)
+
+
+    otherQualification = models.CharField(max_length=256, null=True)
+
+
+class ApplicantInfo(models.Model):
+    photo = models.ImageField(upload_to="static/ApplicantProfilePics", null=True)  # ImageField
+    signature = models.ImageField(upload_to="static/Signatures", null=True)  # ImageField
+
+    nationality = models.CharField(max_length=256, null=True)
+    religion = models.CharField(max_length=256, null=True)
+    caste = models.CharField(max_length=256, null=True)
+    bloodGroup = models.CharField(max_length=256, null=True)
+
+    c_house_name = models.CharField(max_length=256, null=True)
+    c_locality = models.CharField(max_length=256, null=True)
+    c_postoffice = models.CharField(max_length=256, null=True)
+    c_state = models.CharField(max_length=256, null=True)
+    c_district = models.CharField(max_length=256, null=True)
+    c_pincode = models.IntegerField(null=True)  # IntegerField
+
+    p_housename = models.CharField(max_length=256, null=True)
+    p_locality = models.CharField(max_length=256, null=True)
+    p_postoffice = models.CharField(max_length=256, null=True)
+    p_state = models.CharField(max_length=256, null=True)
+    p_district = models.CharField(max_length=256, null=True)
+    p_pincode = models.CharField(max_length=256, null=True)

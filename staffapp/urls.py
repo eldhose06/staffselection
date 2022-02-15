@@ -9,7 +9,10 @@ from staffapp.views import RegisterView, ChangePasswordView, UpdateProfileView, 
 
 router = routers.DefaultRouter()
 
-# router.register(r'user', views.UserViewSet)
+router.register(r'religion', views.ReligionViewSet)
+router.register(r'caste', views.CasteViewSet)
+router.register(r'institutes', views.InstitutesViewSet)
+router.register(r'post', views.PostViewSet)
 
 
 
