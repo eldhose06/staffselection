@@ -21,9 +21,9 @@
 from django.http import HttpResponse
 from rest_framework.utils import json
 
-from .models import User, Religion, Caste, Institutes, Post
+from .models import User, Religion, Caste, Institutes, Post, Nationality
 from .serializers import RegisterSerializer, ChangePasswordSerializer, UpdateUserSerializer, UserCreateSerializer, \
-    UserLoginSerializer, ReligionSerializer, CasteSerializer
+    UserLoginSerializer, ReligionSerializer, CasteSerializer, InstituteSerializer, PostSerializer, NationalitySerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import generics, viewsets
 
@@ -40,6 +40,7 @@ class UserCreateAPIView(generics.CreateAPIView):
     queryset = User.objects.all()
 
 
+
 class UserLoginAPIView(APIView):
     serializer_class = UserLoginSerializer
 
@@ -53,6 +54,10 @@ class UserLoginAPIView(APIView):
             return Response(new_data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class NationalityViewSet(viewsets.ModelViewSet):
+    queryset = Nationality.objects.all()
+    serializer_class = NationalitySerializer
+
 class ReligionViewSet(viewsets.ModelViewSet):
     queryset = Religion.objects.all()
     serializer_class = ReligionSerializer
@@ -63,7 +68,7 @@ class CasteViewSet(viewsets.ModelViewSet):
     serializer_class = CasteSerializer
 
     def list(self, request, *args, **kwargs):
-        print(request.GET.get('religion_id'))
+        print(request.GET.get('religion'))
         caste = Caste.objects.filter(religion=request.GET.get('religion_id'))
         c_list = []
         for item in caste:
@@ -72,15 +77,23 @@ class CasteViewSet(viewsets.ModelViewSet):
         # return HttpResponse(json.dumps(c_list), status=status.HTTP_200_OK)
         return HttpResponse(json.dumps({"caste": c_list}), status=status.HTTP_200_OK)
 
-
 class InstitutesViewSet(viewsets.ModelViewSet):
     queryset = Institutes.objects.all()
-    serializer_class = ReligionSerializer
+    serializer_class = InstituteSerializer
 
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
-    serializer_class = ReligionSerializer
+    serializer_class = PostSerializer
 
+    def list(self, request, *args, **kwargs):
+        print(request.GET.get('institute_id'))
+        postName = Post.objects.filter(institute=request.GET.get('institute_id'))
+        p_list = []
+        for item in postName:
+            p_list.append(item.postName)
+        print(p_list)
+
+        return HttpResponse(json.dumps({"post": p_list}), status=status.HTTP_200_OK)
 
 
 

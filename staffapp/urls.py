@@ -11,6 +11,7 @@ router = routers.DefaultRouter()
 
 router.register(r'religion', views.ReligionViewSet)
 router.register(r'caste', views.CasteViewSet)
+router.register(r'nationality', views.NationalityViewSet)
 router.register(r'institutes', views.InstitutesViewSet)
 router.register(r'post', views.PostViewSet)
 
@@ -20,7 +21,7 @@ urlpatterns = [
     path('', include(router.urls)),
 
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('login/refresh/', TokenRefreshView.as_view(), name='token_refresh'),  # To get access token
 
     path('register/', RegisterView.as_view(), name='auth_register'),
     path('change_password/<int:pk>/', ChangePasswordView.as_view(), name='auth_change_password'),
@@ -30,5 +31,6 @@ urlpatterns = [
 
     path('user/register/', UserCreateAPIView.as_view(), name='user-register'),
     path('user/login/', UserLoginAPIView.as_view(), name="user-login"),
+
 
 ]

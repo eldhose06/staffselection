@@ -48,7 +48,6 @@ class CustomUserManager(BaseUserManager):
         birth and password.
         """
         user = self.create_user(
-
             email,
             password=password,
         )
@@ -60,7 +59,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class User(AbstractBaseUser):
-    # applicationNo = models.CharField(unique=True, max_length=256, null=True, db_index=True)  # IntegerField
+
     name = models.CharField(max_length=256, default="")
     email = models.EmailField(max_length=32, blank=True, unique=True)  # EmailField
     password = models.CharField(max_length=256, default="")
@@ -101,6 +100,9 @@ class Caste(models.Model):
     religion = models.ForeignKey(Religion, on_delete=models.CASCADE)
     caste = models.CharField(max_length=256)
 
+class Nationality(models.Model):
+    nationality = models.CharField(max_length=256)
+
 class Institutes(models.Model):
     instituteName = models.CharField(max_length=256)
 
@@ -109,6 +111,9 @@ class Post(models.Model):
     postName = models.CharField(max_length=256)
 
 class QualificationDetails(models.Model):
+    institute = models.CharField(max_length=256, null=True)
+    post = models.CharField(max_length=256, null=True)
+
     sslcInstitution = models.CharField(max_length=256, null=True)
     sslc_year_of_study = models.CharField(max_length=256, null=True)
     sslc_marks_secured = models.CharField(max_length=256, null=True)
