@@ -14,7 +14,7 @@ router.register(r'caste', views.CasteViewSet)
 router.register(r'nationality', views.NationalityViewSet)
 router.register(r'institutes', views.InstitutesViewSet)
 router.register(r'post', views.PostViewSet)
-
+# router.register(r'user/applicantinfo', views.ApplicantInfoViewSet),
 
 
 urlpatterns = [
@@ -28,6 +28,7 @@ urlpatterns = [
     path('update_profile/<int:pk>/', UpdateProfileView.as_view(), name='auth_update_profile'),
     path('logout/', LogoutView.as_view(), name='auth_logout'),
     path('logout_all/', LogoutAllView.as_view(), name='auth_logout_all'),
+    path('user/applicantInfo/', views.applicant_info, name="get_user_details"),
 
     path('user/register/', UserCreateAPIView.as_view(), name='user-register'),
     path('user/login/', UserLoginAPIView.as_view(), name="user-login"),

@@ -68,6 +68,33 @@ class User(AbstractBaseUser):
     gender = models.CharField(max_length=256, null=True)
     phoneNumber = models.CharField(max_length=24, null=True)
 
+    institute = models.CharField(max_length=256, null=True)
+    post = models.CharField(max_length=256, null=True)
+
+    sslcInstitution = models.CharField(max_length=256, null=True)
+    sslc_year_of_study = models.CharField(max_length=256, null=True)
+    sslcpercentage = models.CharField(max_length=256, null=True)
+
+    plustwoInstitution = models.CharField(max_length=256, null=True)
+    plustwo_year_of_study = models.CharField(max_length=256, null=True)
+    plustwopercentage = models.CharField(max_length=256, null=True)
+
+    otherQualification = models.CharField(max_length=256, null=True)
+
+    aadhar = models.CharField(max_length=256, null=True)
+    nationality = models.CharField(max_length=256, null=True)
+    religion = models.CharField(max_length=256, null=True)
+    caste = models.CharField(max_length=256, null=True)
+    bloodGroup = models.CharField(max_length=256, null=True)
+    handicapped = models.CharField(max_length=256, null=True)
+
+    c_house_name = models.CharField(max_length=256, null=True)
+    c_city = models.CharField(max_length=256, null=True)
+    c_postoffice = models.CharField(max_length=256, null=True)
+    c_district = models.CharField(max_length=256, null=True)
+    c_state = models.CharField(max_length=256, null=True)
+    c_pincode = models.IntegerField(null=True)  # IntegerField
+
     last_login = models.DateTimeField(auto_now_add=True, null=True)  # DateTimeField
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
@@ -79,8 +106,8 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.email
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"
@@ -93,64 +120,19 @@ class User(AbstractBaseUser):
         return True
 
 class Religion(models.Model):
-    religion = models.CharField(max_length=256)
+    religion = models.CharField(max_length=256, unique=True)
 
 
 class Caste(models.Model):
     religion = models.ForeignKey(Religion, on_delete=models.CASCADE)
-    caste = models.CharField(max_length=256)
+    caste = models.CharField(max_length=256, unique=True)
 
 class Nationality(models.Model):
-    nationality = models.CharField(max_length=256)
+    nationality = models.CharField(max_length=256, unique=True)
 
 class Institutes(models.Model):
-    instituteName = models.CharField(max_length=256)
+    instituteName = models.CharField(max_length=256, unique=True)
 
 class Post(models.Model):
     institute = models.ForeignKey(Institutes, on_delete=models.CASCADE)
     postName = models.CharField(max_length=256)
-
-class QualificationDetails(models.Model):
-    institute = models.CharField(max_length=256, null=True)
-    post = models.CharField(max_length=256, null=True)
-
-    sslcInstitution = models.CharField(max_length=256, null=True)
-    sslc_year_of_study = models.CharField(max_length=256, null=True)
-    sslc_marks_secured = models.CharField(max_length=256, null=True)
-    sslc_max_marks = models.CharField(max_length=256, null=True)
-    sslc_board = models.CharField(max_length=256, null=True)
-    sslcpercentage = models.CharField(max_length=256, null=True)
-
-    plustwoInstitution = models.CharField(max_length=256, null=True)
-    plustwo_year_of_study = models.CharField(max_length=256, null=True)
-    plustwo_marks_secured = models.CharField(max_length=256, null=True)
-    plustwo_max_marks = models.CharField(max_length=256, null=True)
-    plustwo_board = models.CharField(max_length=256, null=True)
-    plustwopercentage = models.CharField(max_length=256, null=True)
-
-
-    otherQualification = models.CharField(max_length=256, null=True)
-
-
-class ApplicantInfo(models.Model):
-    photo = models.ImageField(upload_to="static/ApplicantProfilePics", null=True)  # ImageField
-    signature = models.ImageField(upload_to="static/Signatures", null=True)  # ImageField
-
-    nationality = models.CharField(max_length=256, null=True)
-    religion = models.CharField(max_length=256, null=True)
-    caste = models.CharField(max_length=256, null=True)
-    bloodGroup = models.CharField(max_length=256, null=True)
-
-    c_house_name = models.CharField(max_length=256, null=True)
-    c_locality = models.CharField(max_length=256, null=True)
-    c_postoffice = models.CharField(max_length=256, null=True)
-    c_state = models.CharField(max_length=256, null=True)
-    c_district = models.CharField(max_length=256, null=True)
-    c_pincode = models.IntegerField(null=True)  # IntegerField
-
-    p_housename = models.CharField(max_length=256, null=True)
-    p_locality = models.CharField(max_length=256, null=True)
-    p_postoffice = models.CharField(max_length=256, null=True)
-    p_state = models.CharField(max_length=256, null=True)
-    p_district = models.CharField(max_length=256, null=True)
-    p_pincode = models.CharField(max_length=256, null=True)
